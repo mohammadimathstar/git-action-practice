@@ -13,7 +13,6 @@ on:
 jobs:
   build: # Name of the job
     runs-on: ubuntu-latest # OS to run on (a container)
-    container: docker://dvcorg/cml-py3:latest
 
     steps: # steps of the workflow
       # step 1: check out the code from the repository
