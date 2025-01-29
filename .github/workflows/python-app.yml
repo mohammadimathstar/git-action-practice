@@ -37,3 +37,6 @@ jobs:
       - name: Run training script
         run: |
           python train.py
+          echo "Metrics:" > reports.md
+          cat 'metrics.txt' >> reports.md
+          
