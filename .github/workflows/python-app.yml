@@ -20,6 +20,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2 # the action to checkout the repository
 
+      - env:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+
       # step 2: set up python
       - name: Set up Python 3.9
         uses: actions/setup-python@v2 # create python environment
