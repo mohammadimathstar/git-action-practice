@@ -1,25 +1,39 @@
-name: model-wine-quality
-on: [push]
-jobs:
-  run:
-    runs-on: [ubuntu-latest]
-    container: docker://dvcorg/cml-py3:latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: cml_run
-        env:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-        run: |
+name: ML CI
 
-          # Your ML workflow goes here
+# Trigger the workflow on any (event) push or pull request to the main branch
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+
+jobs:
+  build: # Name of the job
+    runs-on: ubuntu-latest # OS to run on (a container)
+
+
+    steps: # steps of the workflow
+      # step 1: check out the code from the repository
+      - name: Checkout
+        uses: actions/checkout@v2 # the action to checkout the repository
+
+      # step 2: set up python
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2 # create python environment
+        with:
+          python-version: 3.9
+
+      # step 3: install dependencies
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
           pip install -r requirements.txt
+
+
+      # step 4: run the training script
+      - name: Run training script
+        run: |
           python train.py
-          
-          echo "## Model metrics" > report.md
-          cat metrics.txt >> report.md
-          
-          echo "## Data viz" >> report.md
-          cml-publish feature_importance.png --md >> report.md
-          cml-publish residuals.png --md >> report.md
-          
-          cml-send-comment report.md
